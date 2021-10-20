@@ -1,5 +1,8 @@
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.FileDownloadMode;
+import com.codeborne.selenide.SelenideWait;
 import io.qameta.allure.Step;
+import com.codeborne.xlstest.XLS;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -16,37 +19,49 @@ import java.util.Scanner;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.Assert.assertThat;
 
 public class DiskPage {
     File file;
     public DiskPage() {
         Configuration.downloadsFolder = "build/downloads";
-//        Configuration.proxyEnabled = true;
-//        Configuration.fileDownload = PROXY;
+
     }
 
     @Step
     public void downloadFile(){
         $(By.xpath("html[1]/body[1]/div[1]/div[1]/div[1]/div[4]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/span[1]"))
-                .shouldHave(text("lab5_1.xlsx")).click();
-        $(By.xpath("//body/div[@id='app']/div[1]/div[1]/div[2]/div[1]/div[2]/button[1]")).click();
+                .shouldHave(text("lab5_1.xls")).click();
+        try {
+            File excelFile = $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/button[1]")).download();
+            sleep(15000);
+            file = searchFileByDeepness("/Users/adelgaraev/Desktop/ТестПО/Lab2Selenide","lab5_1.xls");
+
+            XLS xls = new XLS(file);
+
+            assertThat(xls, XLS.containsText("Москва"));
+            assertThat(xls, XLS.containsText("Название"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         sleep(1000);
     }
 
-    @Step
-    public void checkFile(){
-        try {
-            file = searchFileByDeepness("/Users/adelgaraev/Desktop/ТестПО/Lab2Selenide","lab5_1.xlsx");
-            FileInputStream fileInputStream = new FileInputStream(file);
-            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
-            XSSFSheet sheet = workbook.getSheet("Лист1");
-            XSSFRow row = sheet.getRow(0);
-            Assert.assertEquals("Название", row.getCell(0).toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void uploadFile() {
+        refresh();
+        File imgFile = new File("z-toxic.jpg");
+        $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/span[1]/span[2]/div[1]/input[1]")).uploadFile(imgFile);
+
     }
 
+    public void deleteFile() {
+        refresh();
+        $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[4]/div[2]/div[1]/div[1]/div[3]/div[1]/div[2]"))
+                .shouldHave(text("z-toxic.jpg")).contextClick();
+        $(By.xpath("/html[1]/body[1]/div[3]/div[1]/div[1]/div[4]/div[2]")).shouldHave(text("Удалить"))
+                .click();
+        sleep(5000);
+    }
     public static File searchFileByDeepness(final String directoryName, final String fileName) {
         File target = null;
         if(directoryName != null && fileName != null) {
