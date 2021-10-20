@@ -7,19 +7,21 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.Assert;
+//import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.junit.Assert.*;
+//import org.junit.Assert.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
+import static org.hamcrest.MatcherAssert.assertThat;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.assertThat;
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertSame;
+//import static org.junit.Assert.assertThat;
 
 public class DiskPage {
     File file;
@@ -28,22 +30,28 @@ public class DiskPage {
 
     }
 
-    @Step
+    @Step("Скачивание файла")
     public void downloadFile(){
         $(By.xpath("html[1]/body[1]/div[1]/div[1]/div[1]/div[4]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/span[1]"))
                 .shouldHave(text("lab5_1.xls")).click();
         try {
             File excelFile = $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/button[1]")).download();
             sleep(15000);
-            file = searchFileByDeepness("/Users/adelgaraev/Desktop/ТестПО/Lab2Selenide","lab5_1.xls");
 
-            XLS xls = new XLS(file);
-
-            assertThat(xls, XLS.containsText("Москва"));
-            assertThat(xls, XLS.containsText("Название"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        sleep(1000);
+    }
+
+    @Step("Проверка файла")
+    public void checkFile(){
+        file = searchFileByDeepness("/Users/adelgaraev/Desktop/ТестПО/Lab2Selenide","lab5_1.xls");
+
+        XLS xls = new XLS(file);
+
+        assertThat(xls, XLS.containsText("Москва"));
+        assertThat(xls, XLS.containsText("Название"));
         sleep(1000);
     }
 
