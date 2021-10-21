@@ -1,29 +1,32 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.FileDownloadMode;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.apache.commons.io.FileUtils;
 //import org.junit.After;
 //import org.junit.Before;
 //import org.junit.Rule;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class MainTest {
     static LoginPage loginPage;
     static ProfilePage profilePage;
     static DiskPage diskPage;
 
-
-//    @Rule
-//    public TextReport report = new TextReport();
-
+    @Step("Открытие страницы")
+    public void openUrl() {
+        open("https://passport.yandex.ru/auth");
+    }
 
     @BeforeAll
     public static void setUp() {
@@ -49,26 +52,13 @@ public class MainTest {
 
     }
 
-    @Order(1)
     @Test
-    public void loginInTest() {
-        open("https://passport.yandex.ru/auth");
+    public void mainTest() {
+        openUrl();
         loginPage.loginIn();
-    }
-    @Order(2)
-    @Test
-    public void diskTransitionTest() {
         profilePage.diskTransition();
-    }
-    @Order(3)
-    @Test
-    public void downloadAndFileCheckTest() {
         diskPage.downloadFile();
         diskPage.checkFile();
-    }
-    @Order(4)
-    @Test
-    public void uploadFileTest() {
         diskPage.uploadFile();
         sleep(10000);
     }
