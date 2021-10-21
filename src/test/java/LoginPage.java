@@ -13,7 +13,7 @@ public class LoginPage {
 
     }
 
-    @Step
+    @Step("Авторизация")
     public void loginIn() {
         $(By.id("passp-field-login")).val("AdRGaraev").pressEnter();
         $(By.id("passp-field-passwd")).val("zut47wt8").pressEnter();

@@ -6,7 +6,7 @@ import static com.codeborne.selenide.Selectors.*;
 
 public class ProfilePage {
 
-    @Step
+    @Step("Переход на Яндекс диск")
     public void diskTransition(){
         $(By.className("PageHeader-user")).click();
         $(By.xpath("//header/div[2]/div[2]/div[1]/div[1]/div[1]/ul[1]/ul[1]/li[3]/a[1]")).click();
