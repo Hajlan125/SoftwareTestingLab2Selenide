@@ -35,7 +35,8 @@ public class DiskPage {
         $(By.xpath("html[1]/body[1]/div[1]/div[1]/div[1]/div[4]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/span[1]"))
                 .shouldHave(text("lab5_1.xls")).click();
         try {
-            File excelFile = $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/button[1]")).download();
+            File excelFile = $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/button[1]"))
+                    .download();
             sleep(15000);
 
         } catch (FileNotFoundException e) {
@@ -46,7 +47,8 @@ public class DiskPage {
 
     @Step("Проверка файла")
     public void checkFile(){
-        file = searchFileByDeepness("/Users/adelgaraev/Desktop/ТестПО/Lab2Selenide","lab5_1.xls");
+        file = searchFileByDeepness("/Users/adelgaraev/Desktop/ТестПО/Lab2Selenide",
+                "lab5_1.xls");
 
         XLS xls = new XLS(file);
 
@@ -55,13 +57,16 @@ public class DiskPage {
         sleep(1000);
     }
 
+    @Step("Выгрузка файла")
     public void uploadFile() {
         refresh();
         File imgFile = new File("z-toxic.jpg");
-        $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/span[1]/span[2]/div[1]/input[1]")).uploadFile(imgFile);
+        $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/span[1]/span[2]/div[1]/input[1]"))
+                .uploadFile(imgFile);
 
     }
 
+    @Step("Удаление файла с диска")
     public void deleteFile() {
         refresh();
         $(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[4]/div[2]/div[1]/div[1]/div[3]/div[1]/div[2]"))
